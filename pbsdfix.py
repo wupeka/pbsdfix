@@ -59,13 +59,14 @@ def main():
         old_fs = fsfile.read(4)
     old_fs = struct.unpack("<I", old_fs)[0]
     print("Old freezestatus: %.8x" % old_fs)
-    
-    with open(os.path.join(mountdir, "device.cfg"), "r") as devcfg:
+
+    with open(os.path.join(mountdir, "fwinfo.txt"), "r") as devcfg:
         for l in devcfg.readlines():
-            if l.startswith("serial="):
-                serial = l[7:].strip()
+            if l.startswith("Serial number:"):
+                serial = l[14:].strip()[:-1]
                 break
     print("Device serial: %s" % serial)
+    
     ek = calculate(serial, old_cid)
     ek -= old_fs
     print("Enc key: %.8x" % ek)
